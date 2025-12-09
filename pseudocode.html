@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pseudocode</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .editor-container {
+            margin-top: 10px;
+        }
+        .editor {
+            width: 100%;
+            height: 120px;
+            font-family: monospace;
+            font-size: 14px;
+            background: #0a1f33;
+            color: #cfeaff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            resize: vertical;
+        }
+        .run-btn, .edit-btn, .save-btn {
+            margin-top: 5px;
+            padding: 6px 15px;
+            background: #62cffe;
+            color: #06273c;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s ease;
+            margin-right: 5px;
+        }
+        .run-btn:hover, .edit-btn:hover, .save-btn:hover { background: #b1f3ff; }
+        .output {
+            margin-top: 5px;
+            padding: 10px;
+            background: #06273c;
+            color: #62cffe;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h1><i class="bi bi-terminal"></i> Pseudocode</h1>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="algorithms.html">Algorithms</a>
+        <a href="pseudocode.html">Pseudocode</a>
+        <a href="cpp.html">C++ Codes</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="section-title animate-slide">Pseudocode</h2>
+
+    <div class="grid">
+
+        <!-- Generate 10 pseudocode cards -->
+        <script>
+        const pseudocodes = [
+`// Linear Search
+let A = [5,2,7,1,9], T = 7, index = -1;
+for(let i=0;i<A.length;i++){
+    if(A[i]==T){ index=i; break; }
+}
+console.log("Index:", index);`,
+
+`// Binary Search
+let A=[1,3,5,7,9], T=5;
+let low=0, high=A.length-1, index=-1;
+while(low<=high){
+    let mid = Math.floor((low+high)/2);
+    if(A[mid]==T){ index=mid; break; }
+    else if(A[mid]<T) low=mid+1;
+    else high=mid-1;
+}
+console.log("Index:", index);`,
+
+`// Bubble Sort
+let A=[5,2,7,1,9];
+for(let i=0;i<A.length;i++){
+    for(let j=0;j<A.length-i-1;j++){
+        if(A[j]>A[j+1]) [A[j],A[j+1]]=[A[j+1],A[j]];
+    }
+}
+console.log("Sorted:", A);`,
+
+`// Selection Sort
+let A=[5,2,7,1,9];
+for(let i=0;i<A.length-1;i++){
+    let min=i;
+    for(let j=i+1;j<A.length;j++){ if(A[j]<A[min]) min=j; }
+    [A[i],A[min]]=[A[min],A[i]];
+}
+console.log("Sorted:", A);`,
+
+`// Insertion Sort
+let A=[5,2,7,1,9];
+for(let i=1;i<A.length;i++){
+    let key=A[i], j=i-1;
+    while(j>=0 && A[j]>key){ A[j+1]=A[j]; j--; }
+    A[j+1]=key;
+}
+console.log("Sorted:", A);`,
+
+`// Fibonacci
+function fib(n){ if(n<=1) return n; return fib(n-1)+fib(n-2);}
+console.log("Fib(7):", fib(7));`,
+
+`// Factorial
+function fact(n){ if(n==0) return 1; return n*fact(n-1);}
+console.log("Fact(5):", fact(5));`,
+
+`// Find Max
+let A=[5,2,7,1,9], max=A[0];
+for(let i=1;i<A.length;i++){ if(A[i]>max) max=A[i]; }
+console.log("Max:", max);`,
+
+`// Find Min
+let A=[5,2,7,1,9], min=A[0];
+for(let i=1;i<A.length;i++){ if(A[i]<min) min=A[i]; }
+console.log("Min:", min);`,
+
+`// Sum of Array
+let A=[5,2,7,1,9], sum=0;
+for(let i=0;i<A.length;i++) sum+=A[i];
+console.log("Sum:", sum);`
+        ];
+
+        const container = document.querySelector('.grid');
+        pseudocodes.forEach((code, i)=>{
+            const card = document.createElement('div');
+            card.className = "card animate-up";
+            card.innerHTML = `
+                <h3>${i+1}. ${["Linear Search","Binary Search","Bubble Sort","Selection Sort","Insertion Sort","Fibonacci","Factorial","Find Max","Find Min","Sum of Array"][i]}</h3>
+                <div class="editor-container">
+                    <textarea class="editor" id="pseudo${i+1}" readonly>${code}</textarea>
+                    <br>
+                    <button class="edit-btn" onclick="editCode('pseudo${i+1}')">Edit</button>
+                    <button class="save-btn" onclick="saveCode('pseudo${i+1}')">Save</button>
+                    <button class="run-btn" onclick="runPseudo(${i+1})">Run</button>
+                    <div class="output" id="out${i+1}"></div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        </script>
+
+    </div>
+</div>
+
+<script>
+function editCode(id){
+    document.getElementById(id).removeAttribute('readonly');
+}
+
+function saveCode(id){
+    document.getElementById(id).setAttribute('readonly','readonly');
+}
+
+function runPseudo(num){
+    let editor = document.getElementById('pseudo' + num);
+    let output = document.getElementById('out' + num);
+    output.textContent = '';
+
+    try {
+        let logs = [];
+        let code = editor.value;
+        let consoleBackup = console.log;
+        console.log = function(...args){ logs.push(args.join(" ")); }
+
+        eval(code);
+
+        console.log = consoleBackup;
+
+        output.textContent = logs.join("\n");
+    } catch(e){
+        output.textContent = e;
+    }
+}
+</script>
+
+</body>
+</html>

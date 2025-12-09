@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C++ Codes (Interactive)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .editor-container {
+            margin-top: 10px;
+        }
+        .editor {
+            width: 100%;
+            height: 140px;
+            font-family: monospace;
+            font-size: 14px;
+            background: #0a1f33;
+            color: #cfeaff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            resize: vertical;
+        }
+        .run-btn, .edit-btn, .save-btn {
+            margin-top: 5px;
+            padding: 6px 15px;
+            background: #62cffe;
+            color: #06273c;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s ease;
+            margin-right: 5px;
+        }
+        .run-btn:hover, .edit-btn:hover, .save-btn:hover { background: #b1f3ff; }
+        .output {
+            margin-top: 5px;
+            padding: 10px;
+            background: #06273c;
+            color: #62cffe;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h1><i class="bi bi-code-slash"></i> C++ Codes</h1>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="algorithms.html">Algorithms</a>
+        <a href="pseudocode.html">Pseudocode</a>
+        <a href="cpp.html">C++ Codes</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="section-title animate-slide">C++ Codes </h2>
+
+    <div class="grid">
+
+        <script>
+        const cppSimulations = [
+`// Stack – Infix to Postfix
+function infixToPostfix(s){
+    let st=[], res="";
+    function prec(c){ if(c=='^') return 3; if(c=='*'||c=='/') return 2; if(c=='+'||c=='-') return 1; return -1;}
+    for(let c of s){
+        if(/[A-Za-z0-9]/.test(c)) res+=c;
+        else if(c=='(') st.push(c);
+        else if(c==')'){ while(st.length && st[st.length-1]!='('){ res+=st.pop(); } st.pop();}
+        else{ while(st.length && prec(c)<=prec(st[st.length-1])) res+=st.pop(); st.push(c);}
+    }
+    while(st.length) res+=st.pop();
+    return res;
+}
+console.log(infixToPostfix("A+B*C"));`,
+
+`// Binary Tree Traversals
+class Node{
+    constructor(v){ this.data=v; this.left=null; this.right=null; }
+}
+let root = new Node(1);
+root.left = new Node(2); root.right = new Node(3);
+
+function inorder(node){ if(node){ inorder(node.left); console.log(node.data); inorder(node.right); } }
+function preorder(node){ if(node){ console.log(node.data); preorder(node.left); preorder(node.right); } }
+function postorder(node){ if(node){ postorder(node.left); postorder(node.right); console.log(node.data); } }
+
+console.log("Inorder:");
+inorder(root);
+console.log("Preorder:");
+preorder(root);
+console.log("Postorder:");
+postorder(root);`,
+
+`// Queue Simulation
+let q=[], front=0, rear=-1;
+q[++rear]=10; q[++rear]=20;
+console.log("Dequeued:", q[front++]);
+console.log("Queue now:", q.slice(front));`,
+
+`// Array Simulation
+let arr=[5,2,7,1,9];
+console.log("Array elements:");
+for(let i=0;i<arr.length;i++) console.log(arr[i]);`
+        ];
+
+        const names = ["Stack – Infix to Postfix","Binary Tree Traversals","Queue","Array"];
+        const container = document.querySelector('.grid');
+
+        cppSimulations.forEach((code,i)=>{
+            const card = document.createElement('div');
+            card.className = "card animate-up";
+            card.innerHTML = `
+                <h3>${i+1}. ${names[i]} (JS Simulation)</h3>
+                <div class="editor-container">
+                    <textarea class="editor" id="cpp${i+1}" readonly>${code}</textarea><br>
+                    <button class="edit-btn" onclick="editCode('cpp${i+1}')">Edit</button>
+                    <button class="save-btn" onclick="saveCode('cpp${i+1}')">Save</button>
+                    <button class="run-btn" onclick="runCpp(${i+1})">Run</button>
+                    <div class="output" id="out${i+1}"></div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        </script>
+
+    </div>
+</div>
+
+<script>
+function editCode(id){
+    document.getElementById(id).removeAttribute('readonly');
+}
+
+function saveCode(id){
+    document.getElementById(id).setAttribute('readonly','readonly');
+}
+
+function runCpp(num){
+    let editor = document.getElementById('cpp'+num);
+    let output = document.getElementById('out'+num);
+    output.textContent = '';
+    let logs=[];
+    let code = editor.value;
+    let oldConsole = console.log;
+    console.log = function(...args){ logs.push(args.join(' ')); }
+    try{
+        eval(code);
+        output.textContent = logs.join('\n');
+    } catch(e){
+        output.textContent = e;
+    }
+    console.log = oldConsole;
+}
+</script>
+
+</body>
+</html>

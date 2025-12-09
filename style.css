@@ -1,0 +1,289 @@
+/* ---------------------------- */
+/*   GLOBAL PAGE THEME          */
+/* ---------------------------- */
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #071422;
+    color: #e9f1ff;
+}
+
+html { scroll-behavior: smooth; }
+
+/* ---------------------------- */
+/*   NAVIGATION BAR             */
+/* ---------------------------- */
+
+nav {
+    position: fixed;           
+    top: 0;
+    left: 0;
+    width: 100%;               
+    z-index: 999;              
+
+    background: rgba(8, 18, 33, 0.9);
+    backdrop-filter: blur(12px);
+    padding: 10px 40px;        /* Skinnier but enough for content */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+
+    height: 60px;              /* Ensure navbar height doesn't cut content */
+    box-sizing: border-box;    /* Include padding in height */
+}
+
+/* Adjust body padding so content doesn’t hide under fixed navbar */
+body {
+    padding-top: 60px;   /* Same as navbar height */
+}
+
+body {
+    padding-top: 60px;   /* Approx equal to navbar height after padding */
+}
+
+
+nav h1 {
+    color: #fff;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* FIXED: Navigation links styled on ALL pages */
+nav a {
+    color: #d8e9ff;
+    margin-left: 25px;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    font-weight: 500;
+}
+
+nav a:hover {
+    background: rgba(255,255,255,0.15);
+    color: #66d8ff;
+    text-shadow: 0 0 8px #66d8ff;
+    transform: translateY(-2px);
+}
+
+/* ---------------------------- */
+/*           HERO               */
+/* ---------------------------- */
+
+.hero {
+    position: relative;
+    padding: 140px 20px;
+    text-align: center;
+    background: url("background.jpg") no-repeat center/cover;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 15, 32, 0.7);
+    backdrop-filter: blur(1px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+.hero h2 {
+    font-size: 48px;
+    font-weight: 800;
+}
+
+.hero p {
+    font-size: 20px;
+    opacity: 0.9;
+}
+
+/* HERO BUTTONS */
+.hero-buttons {
+    margin-top: 30px;
+}
+
+.hero-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    margin: 8px;
+    background: #62cffe;
+    color: #06273c;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+    background: #b1f3ff;
+    transform: translateY(-4px);
+}
+
+/* ---------------------------- */
+/*         CONTAINERS           */
+/* ---------------------------- */
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* ---------------------------- */
+/*           GRID               */
+/* ---------------------------- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Always 2 columns */
+    gap: 25px;
+}
+
+
+/* ---------------------------- */
+/*            CARDS             */
+/* ---------------------------- */
+
+.card {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(15px);
+    border-radius: 14px;
+    padding: 22px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    border-color: #53cfff;
+}
+
+.card h2, .card h3 {
+    margin: 0;
+    color: #ffffff;
+}
+
+/* ---------------------------- */
+/*          CODE BLOCKS         */
+/* ---------------------------- */
+
+/* FIXED: No scrollbars + wraps lines fully visible */
+pre {
+    background: #0a1f33;
+    padding: 22px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 15px;
+    color: #cfeaff;
+
+    /* FIXED WRAPPING */
+    white-space: pre-wrap;  
+    word-wrap: break-word;
+    overflow: visible;      /* removes scrollbars */
+
+    line-height: 1.45;
+}
+
+/* ---------------------------- */
+/*          FOOTER              */
+/* ---------------------------- */
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    background: rgba(10, 20, 40, 0.8);
+}
+
+/* ---------------------------- */
+/*         ANIMATIONS           */
+/* ---------------------------- */
+
+@keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slide {
+    from { transform:translateY(30px); opacity:0; }
+    to { transform:translateY(0); opacity:1; }
+}
+
+@keyframes up {
+    from { transform:translateY(20px); opacity:0; }
+    to { transform:translateY(0); opacity:1; }
+}
+
+.animate-fade { animation: fade 1.2s ease forwards; }
+.animate-slide { animation: slide 1s ease forwards; }
+.animate-up    { animation: up 1s ease forwards; }
+
+/* ---------------- ANIMATIONS ---------------- */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Apply animations */
+.fade-up {
+    animation: fadeUp 0.7s ease-out;
+}
+
+.fade-slide {
+    animation: fadeSlide 0.7s ease-out;
+}
+
+/* Make all cards animate */
+.card {
+    animation: fadeUp 0.8s ease-out;
+}
+.editor-buttons {
+    margin: 10px 0;
+}
+
+.editor-buttons button {
+    padding: 8px 16px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #62cffe;
+    color: #06273c;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.editor-buttons button:hover {
+    background: #b1f3ff;
+    transform: translateY(-2px);
+}
