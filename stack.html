@@ -115,6 +115,7 @@ function pushItem() {
     const input = document.getElementById("value");
     const v = input.value;
     if (!v) return alert("Enter a value");
+    if (stack.length >= 5) return alert("Stack Overflow! Maximum 5 items allowed.");
     stack.push(v);
     render();
     input.value = "";  // Clear input after push
