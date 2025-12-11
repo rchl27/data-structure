@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Tree Visualizer</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+.visual-container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.visual-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(15px);
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.15);
+    margin-top: 20px;
+}
+
+input {
+    padding: 10px;
+    width: 200px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+button {
+    padding: 10px 22px;
+    background: #62cffe;
+    color: #06273c;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #b1f3ff;
+    transform: translateY(-3px);
+}
+
+#tree-area {
+    position: relative;
+    height: 600px;
+    margin-top: 25px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+.node {
+    position: absolute;
+    background: #facc15;
+    padding: 14px 18px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    animation: fadeUp 0.5s;
+    font-weight: bold;
+}
+
+svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+    <h1><i class="bi bi-diagram-3"></i> Tree Visualizer</h1>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="stack.html">Stack</a>
+        <a href="queue.html">Queue</a>
+        <a href="tree.html">Tree</a>
+    </div>
+</nav>
+
+<div class="visual-container fade-up">
+
+    <h2 class="section-title">Binary Tree Visualizer</h2>
+
+    <div class="visual-card">
+
+        <input id="value" type="number" placeholder="Enter number">
+        <button onclick="insertNode()">Insert</button>
+        <button onclick="clearTree()">Clear</button>
+
+        <div id="tree-area"></div>
+    </div>
+</div>
+
+<script>
+class Node {
+    constructor(v) {
+        this.val = v;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+let root = null;
+
+// INSERT NORMAL BST
+function insert(root, v) {
+    if (!root) return new Node(v);
+    if (v < root.val) root.left = insert(root.left, v);
+    else root.right = insert(root.right, v);
+    return root;
+}
+
+function insertNode() {
+    const input = document.getElementById("value");
+    const v = input.value;
+    if (v === "") return alert("Enter a number");
+    root = insert(root, parseInt(v));
+    drawTree();
+    input.value = "";  // Clear input after insertion
+}
+
+function clearTree() {
+    root = null;
+    drawTree();
+}
+
+function drawTree() {
+    const area = document.getElementById("tree-area");
+    area.innerHTML = "";
+
+    if (!root) return;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    area.appendChild(svg);
+
+    const levelSpacing = 95;
+    const baseSpread = 260;
+
+    // First pass: calculate tree depth
+    function getDepth(node) {
+        if (!node) return 0;
+        return 1 + Math.max(getDepth(node.left), getDepth(node.right));
+    }
+
+    const depth = getDepth(root);
+
+    // AUTO-SCALE SPREAD (prevents overflow)
+    const scaledSpread = Math.max(80, baseSpread - (depth * 20));
+
+    // Calculate container width for overflow correction
+    const containerWidth = area.offsetWidth;
+
+    // Temporary tracking of min and max X to center the tree
+    let minX = Infinity;
+    let maxX = -Infinity;
+
+    // First pass: simulate and track bounds
+    function track(node, x, y, spread) {
+        if (!node) return;
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+
+        track(node.left, x - spread, y + levelSpacing, spread * 0.55);
+        track(node.right, x + spread, y + levelSpacing, spread * 0.55);
+    }
+
+    track(root, containerWidth / 2, 20, scaledSpread);
+
+    // FIX: If nodes overflow -> shift left
+    let shiftX = 0;
+    if (maxX > containerWidth - 50) {
+        shiftX = (containerWidth - 50) - maxX;
+    }
+    if (minX < 50) {
+        shiftX = 50 - minX;
+    }
+
+    // DRAW TREE
+    function draw(node, x, y, spread) {
+        if (!node) return;
+
+        x += shiftX;  // apply correction
+
+        // NODE DRAW
+        let d = document.createElement("div");
+        d.className = "node";
+        d.textContent = node.val;
+        d.style.left = (x - 20) + "px";
+        d.style.top = y + "px";
+        area.appendChild(d);
+
+        // LINES & RECURSION
+        if (node.left) {
+            let nx = x - spread;
+            let ny = y + levelSpacing;
+
+            let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x);
+            line.setAttribute("y1", y);
+            line.setAttribute("x2", nx);
+            line.setAttribute("y2", ny);
+            line.setAttribute("stroke", "white");
+            line.setAttribute("stroke-width", "2");
+            svg.appendChild(line);
+
+            draw(node.left, nx, ny, spread * 0.55);
+        }
+
+        if (node.right) {
+            let nx = x + spread;
+            let ny = y + levelSpacing;
+
+            let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x);
+            line.setAttribute("y1", y);
+            line.setAttribute("x2", nx);
+            line.setAttribute("y2", ny);
+            line.setAttribute("stroke", "white");
+            line.setAttribute("stroke-width", "2");
+            svg.appendChild(line);
+
+            draw(node.right, nx, ny, spread * 0.55);
+        }
+    }
+
+    draw(root, containerWidth / 2, 20, scaledSpread);
+}
+
+</script>
+
+</body>
+</html>

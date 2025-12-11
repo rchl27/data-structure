@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Stack Visualizer</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+.visual-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.visual-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(15px);
+    border-radius: 14px;
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,0.15);
+    margin-top: 20px;
+}
+
+input {
+    padding: 10px;
+    width: 200px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 22px;
+    background: #62cffe;
+    color: #06273c;
+    border-radius: 30px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #b1f3ff;
+    transform: translateY(-3px);
+}
+
+#stack-box {
+    margin-top: 30px;
+    padding: 20px;
+    min-height: 250px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+}
+
+.stack-item {
+    background: #2563eb;
+    padding: 14px;
+    text-align: center;
+    margin: 10px 0;
+    border-radius: 10px;
+    font-weight: bold;
+    animation: fadeUp 0.4s ease-out;
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+    <h1><i class="bi bi-box-arrow-in-down"></i> Stack Visualizer</h1>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="stack.html">Stack</a>
+        <a href="queue.html">Queue</a>
+        <a href="tree.html">Tree</a>
+    </div>
+</nav>
+
+<div class="visual-container fade-up">
+
+    <h2 class="section-title">Stack Visualizer</h2>
+
+    <div class="visual-card">
+
+        <input type="text" id="value" placeholder="Enter value">
+        <button onclick="pushItem()">Push</button>
+        <button onclick="popItem()">Pop</button>
+        <button onclick="peekItem()">Peek</button>
+        <button onclick="clearStack()">Clear</button>
+
+        <div id="stack-box"></div>
+    </div>
+
+</div>
+
+<script>
+let stack = [];
+
+function render() {
+    const box = document.getElementById("stack-box");
+    box.innerHTML = "";
+    stack.slice().reverse().forEach(v => {
+        let d = document.createElement("div");
+        d.className = "stack-item";
+        d.textContent = v;
+        box.appendChild(d);
+    });
+}
+
+function pushItem() {
+    const input = document.getElementById("value");
+    const v = input.value;
+    if (!v) return alert("Enter a value");
+    stack.push(v);
+    render();
+    input.value = "";  // Clear input after push
+}
+
+function popItem() {
+    if (stack.length === 0) return alert("Stack is empty!");
+    alert("Popped: " + stack.pop());
+    render();
+}
+
+function peekItem() {
+    if (stack.length === 0) return alert("Stack is empty!");
+    alert("Top: " + stack[stack.length - 1]);
+}
+
+function clearStack() {
+    stack = [];
+    render();
+}
+
+render();
+</script>
+
+</body>
+</html>
